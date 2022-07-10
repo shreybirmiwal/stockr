@@ -18,15 +18,14 @@ async def on_message(message):
         #ticker
         messageDict['ticker'] = str(input[1])
 
-        #time
+        #time in UTC
         hour = int(input[2])
         minute = int(input[3])
-        if(hour < 7):
-            hour += 12
+
+        hour+=12
             
         messageDict['hour'] = hour
         messageDict['minute'] = minute
-
 
         #strat
         messageDict['strat'] = str(input[4])
@@ -35,12 +34,18 @@ async def on_message(message):
         messageDict['rule'] = str(input[5])
 
         today = str(datetime.date.today())
-        waitTill = datetime.datetime(int(today[:4]), int(today[5:7]), int(today[8:10]), messageDict['hour'], messageDict['minute'],tzinfo=datetime.timezone.utc)
-        print(waitTill)
-
+        waitTill = datetime.datetime(int(today[:4]), int(today[5:7]), int(today[8:10]), messageDict['hour'], messageDict['minute'])
+        #print(datetime.datetime.now())
+        #print(waitTill)
         await discord.utils.sleep_until(waitTill)
-        await message.channel.send(messageDict)
+
+        output = ""
+        for value in messageDict.values():
+            if(not type(value) == int):
+                output = output + " " + str(value)
+
+        await message.channel.send(output)
 
 
-client.run('OTk1NTY3MzM3MzEyODk5MDgz.GZszpS.a8kEXCT2G-a4l6Q4TeIND7Zg8_7l5CDp27HrfQ')
+client.run('OTk1NTY3MzM3MzEyODk5MDgz.GSXeQ8.R6wu3WokdiF15H-Yh5groQiIZq_z-HnOTXXYNE')
 s
