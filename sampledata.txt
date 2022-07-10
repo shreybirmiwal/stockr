@@ -1,0 +1,2 @@
+!short spy 1 22 x+2 lowvol
+!long xle 1 21 hypeflat smallcandle
