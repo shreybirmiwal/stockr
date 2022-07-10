@@ -1,5 +1,20 @@
 import discord
 import datetime
+import pandas as pd
+import yfinance as yf
+
+def lowVol(ticker):
+    tick = yf.Ticker(ticker.lower())
+    gotData = tick.history(start="2022-6-10", interval="1d")
+    avgVol = gotData["Volume"].mean()
+    print(avgVol)
+    curVol = gotData.iloc[gotData.shape[0]-1].Volume
+    print(curVol)
+    
+    if(curVol < avgVol):
+        return True
+    else:
+        return False
 
 client = discord.Client()
 
@@ -49,7 +64,6 @@ async def on_message(message):
 
         waitTill = datetime.datetime(year, day, month, hour , minute)
         print(waitTill)
-        channel = client.get_channel(995804795195621416)
         emoji = '\N{THUMBS UP SIGN}'
         await message.add_reaction(emoji)
 
@@ -59,8 +73,15 @@ async def on_message(message):
         for value in messageDict.values():
             if(not type(value) == int):
                 output = output + " " + str(value)
+                
+        channel1 = client.get_channel(995804795195621416)
+        await channel1.send("@everyone " + output)
+        if(lowVol(messageDict['ticker'].lower())):
+                await channel1.send("@everyone Previous day LOW VOLUME!")
+        else:
+                await channel1.send("@everyone Proceed with caution - high volume day previous")
 
-        await channel.send("@everyone " + output)
+
 
 client.run(')
 s
