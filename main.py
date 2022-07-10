@@ -44,8 +44,10 @@ async def on_message(message):
             if(not type(value) == int):
                 output = output + " " + str(value)
 
+        emoji = '\N{THUMBS UP SIGN}'
+        await message.add_reaction(emoji)
         await message.channel.send(output)
 
 
-client.run('OTk1NTY3MzM3MzEyODk5MDgz.GSXeQ8.R6wu3WokdiF15H-Yh5groQiIZq_z-HnOTXXYNE')
+client.run('')
 s
