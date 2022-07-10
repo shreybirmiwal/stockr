@@ -1,2 +1,10 @@
-!short spy 1 22 x+2 lowvol
-!long xle 1 21 hypeflat smallcandle
+!short spy 1 25 x+2 lowvol
+!long xle 1 24 hypeflat smallcandle
+
+        now_UTC = waitTill.astimezone(timezone('UTC'))
+
+
+        print(waitTill)
+
+        await discord.utils.sleep_until(now_UTC)
+        await message.channel.send(messageDict)

@@ -18,9 +18,12 @@ async def on_message(message):
         #ticker
         messageDict['ticker'] = str(input[1])
 
+        #date
+        messageDict['date'] = str(input[2])
+
         #time in UTC
-        hour = int(input[2])
-        minute = int(input[3])
+        hour = int(input[3])
+        minute = int(input[4])
 
         hour+=12
             
@@ -28,15 +31,28 @@ async def on_message(message):
         messageDict['minute'] = minute
 
         #strat
-        messageDict['strat'] = str(input[4])
+        messageDict['strat'] = str(input[5])
 
         #rule
-        messageDict['rule'] = str(input[5])
+        messageDict['rule'] = str(input[6])
 
-        today = str(datetime.date.today())
-        waitTill = datetime.datetime(int(today[:4]), int(today[5:7]), int(today[8:10]), messageDict['hour'], messageDict['minute'])
-        #print(datetime.datetime.now())
-        #print(waitTill)
+        day = int(messageDict['date'][0:1])
+        month = int(messageDict['date'][2:4])
+        year = int(messageDict['date'][5:9])
+        hour = messageDict['hour']
+        minute = messageDict['minute']
+
+        #print(day)
+        #print(month)
+        #print(year)
+        #print(str(datetime.date.today()))
+
+        waitTill = datetime.datetime(year, day, month, hour , minute)
+        print(waitTill)
+        channel = client.get_channel(995804795195621416)
+        emoji = '\N{THUMBS UP SIGN}'
+        await message.add_reaction(emoji)
+
         await discord.utils.sleep_until(waitTill)
 
         output = ""
@@ -44,10 +60,7 @@ async def on_message(message):
             if(not type(value) == int):
                 output = output + " " + str(value)
 
-        emoji = '\N{THUMBS UP SIGN}'
-        await message.add_reaction(emoji)
-        await message.channel.send(output)
+        await channel.send("@everyone " + output)
 
-
-client.run('')
+client.run(')
 s
