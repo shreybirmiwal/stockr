@@ -2,6 +2,12 @@ import discord
 import datetime
 import pandas as pd
 import yfinance as yf
+import asyncio
+from discord.ext import commands, tasks
+
+client = discord.Client()
+firstred = []
+firstgreen =[]
 
 def lowVol(ticker):
     tick = yf.Ticker(ticker.lower())
@@ -16,13 +22,52 @@ def lowVol(ticker):
     else:
         return False
 
-client = discord.Client()
+@tasks.loop(hours=24)
+async def firststrat():
+            
+      for tick in firstred[::-1]:
+            print(tick)
+            
+            ticker = yf.Ticker(tick.lower())
+            gotData = ticker.history(start="2022-7-5", interval="1d")
+            GreenOrRed = gotData.iloc[gotData.shape[0]-1].Close -  gotData.iloc[gotData.shape[0]-1].Open
+            if(GreenOrRed < 0): #if it truly is red
+                  print(tick + " ALERT! Has hit trigger of FIRST RED! GO LONG!")
+                  channel2 = client.get_channel(996218343038140506)
+                  await channel2.send(tick + " @everyone Has hit trigger of FIRST RED! GO LONG!")
+                  
+                  firstred.remove(tick)
+
+
+      for tick in firstgreen[::-1]:
+            print(tick)
+
+            ticker = yf.Ticker(tick.lower())
+            gotData = ticker.history(start="2022-7-5", interval="1d")
+            GreenOrRed = gotData.iloc[gotData.shape[0]-1].Close -  gotData.iloc[gotData.shape[0]-1].Open
+            if(GreenOrRed > 0): #if it truly is green
+                  print(tick + " ALERT! Has hit trigger of FIRST GREEN! GO SHORT!")
+                  channel2 = client.get_channel(996218343038140506)
+                  await channel2.send(tick + " @everyone Has hit trigger of FIRST GREEN! GO SHORT!")
+                  firstgreen.remove(tick)
 
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
- 
+
+    if message.content.startswith("firstred"):
+        ticker = str(message.content)[9:]
+        firstred.append(ticker)
+        print("red")
+        print(firstred)
+
+    if message.content.startswith("firstgreen"):
+        ticker = str(message.content)[11:]
+        firstgreen.append(ticker)
+        print("green")
+        print(firstgreen)
+          
     if message.content.startswith("!"):
         input = message.content.split()
         messageDict ={}
@@ -76,7 +121,7 @@ async def on_message(message):
             if(not type(value) == int):
                 output = output + " " + str(value)
                 
-        channel1 = client.get_channel(995804795195621416)
+        channel1 = client.get_channel(996218343038140506)
         await channel1.send("@everyone " + output)
         if(lowVol(messageDict['ticker'].lower())):
                 await channel1.send("@everyone Previous day LOW VOLUME!")
@@ -84,5 +129,10 @@ async def on_message(message):
                 await channel1.send("@everyone Proceed with caution - high volume day previous")
 
 
+def main():
 
-client.run('OTk1NTY3MzM3MzEyODk5MDgz.GzbsWi.WQikMS3xBi40IntsToai9ioR5Wc8id0eRtQ8No')
+      firststrat.start()
+      client.run('OTk1NTY3MzM3MzEyODk5MDgz.GzbsWi.WQikMS3xBi40IntsToai9ioR5Wc8id0eRtQ8No')
+
+if __name__ == '__main__':
+    main()
