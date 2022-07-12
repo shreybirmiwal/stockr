@@ -66,7 +66,9 @@ async def on_message(message):
         print(waitTill)
         emoji = '\N{THUMBS UP SIGN}'
         await message.add_reaction(emoji)
-
+    
+        
+        #WAIT TILL ThE TIME TO CHECK!
         await discord.utils.sleep_until(waitTill)
 
         output = ""
@@ -83,5 +85,4 @@ async def on_message(message):
 
 
 
-client.run('')
-s
+client.run('OTk1NTY3MzM3MzEyODk5MDgz.GzbsWi.WQikMS3xBi40IntsToai9ioR5Wc8id0eRtQ8No')
