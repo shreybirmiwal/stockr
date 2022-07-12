@@ -2,10 +2,6 @@ import discord
 import datetime
 import pandas as pd
 import yfinance as yf
-import threading
-import schedule
-import time
-import logging
 import asyncio
 from discord.ext import commands, tasks
 

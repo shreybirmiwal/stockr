@@ -6,3 +6,4 @@ DateTime==4.3
 pandas==1.1.5
 yfinance==0.1.63
 nest-asyncio==1.5.1
+schedule==1.0.0
